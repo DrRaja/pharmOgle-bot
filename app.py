@@ -158,7 +158,16 @@ if demo_option == 'Choose from list':
     ('Adol','Aggrex','Amrizole','Atoreza','Augmentin','Betadine','Brufen','C-retard','Ceftriaxone','Celebrex','Cemicresto','Cholerose','Ciprofar','Clarinase','Congestal','Daflon','Dalacin','Diflucan','Flagyl','Floxabact','Foradil','Fucidin','Garamycin','Glucophage','Ivypront','Janumet','Jusprin','Lactulose','Lamifen','Megamox','Midodrine','Mucophylline','Neurovit','Oracure','Pridocaine','Primrose','Sediproct','Zantac','Zyrtec'), key = "mediselect")
     
     # print(vector_database)
-    vector_database = load_faiss_index(image_label.lower())
+    if "vdb" not in st.session_state:
+        st.session_state.vdb = load_faiss_index(image_label.lower())
+        st.session_state.medi = image_label.lower()
+    else:
+        if image_label.lower() != st.session_state.medi:
+            st.session_state.vdb = load_faiss_index(image_label.lower())
+            st.session_state.medi = image_label.lower()
+        vector_database = st.session_state.vdb
+
+    # vector_database = load_faiss_index(image_label.lower())
     qa_retriever = load_retriever(llm= llm_model, db= vector_database)
 
       
