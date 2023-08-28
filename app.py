@@ -10,7 +10,7 @@ import json
 import torch
 from tqdm.auto import tqdm
 from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceInstructEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.llms import Clarifai
@@ -58,8 +58,11 @@ st.set_page_config(
 
 @st.cache_resource
 def load_embedding_model():
-    embedding_model = HuggingFaceInstructEmbeddings(model_name='hkunlp/instructor-base',
-                                                model_kwargs = {'device': torch.device('cuda' if torch.cuda.is_available() else 'cpu')})
+    # embedding_model = HuggingFaceInstructEmbeddings(model_name='hkunlp/instructor-base',
+                                                # model_kwargs = {'device': torch.device('cuda' if torch.cuda.is_available() else 'cpu')})
+    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
+                                   model_kwargs={'device':"cpu"})
+
     return embedding_model
 
 @st.cache_data
