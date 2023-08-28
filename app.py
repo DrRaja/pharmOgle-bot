@@ -75,7 +75,6 @@ def load_llm_model():
     llm = Clarifai(
     pat=PAT, user_id=Llama_USER_ID, app_id=Llama_APP_ID, model_id=Llama_MODEL_ID, verbose=True
     )
-
     return llm
 
 
@@ -173,12 +172,9 @@ if demo_option == 'Choose from list':
     # vector_database = load_faiss_index(image_label.lower())
     qa_retriever = load_retriever(llm= llm_model, db= vector_database)
 
-      
-
     st.write("""
             ### Ask a question
             """)
-
 
     for chat in st.session_state.chat_history:
         st_message(**chat)
@@ -197,7 +193,17 @@ else:
     if uploaded_file is not None:
         bytes_data = uploaded_file.getvalue()
         image_label = utils.get_image_label(bytes_data, USER_ID, APP_ID, MODEL_ID, PAT, MODEL_VERSION_ID)
-        vector_database = load_faiss_index(image_label)
+
+        if "vdb" not in st.session_state:
+            st.session_state["vdb"] = load_faiss_index(image_label.lower())
+            st.session_state["medi"] = image_label.lower()
+        else:
+            if image_label.lower() != st.session_state["medi"]:
+                st.session_state["vdb"] = load_faiss_index(image_label.lower())
+                st.session_state["medi"] = image_label.lower()
+
+        vector_database = st.session_state["vdb"]
+        # vector_database = load_faiss_index(image_label)
         qa_retriever = load_retriever(llm= llm_model, db= vector_database)
 
         st.write("""
