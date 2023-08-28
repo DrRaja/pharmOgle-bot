@@ -159,12 +159,12 @@ if demo_option == 'Choose from list':
     
     # print(vector_database)
     if "vdb" not in st.session_state:
-        st.session_state.vdb = load_faiss_index(image_label.lower())
-        st.session_state.medi = image_label.lower()
+        st.session_state["vdb"] = load_faiss_index(image_label.lower())
+        st.session_state["medi"] = image_label.lower()
     else:
-        if image_label.lower() != st.session_state.medi:
-            st.session_state.vdb = load_faiss_index(image_label.lower())
-            st.session_state.medi = image_label.lower()
+        if image_label.lower() != st.session_state["medi"]:
+            st.session_state["vdb"] = load_faiss_index(image_label.lower())
+            st.session_state["medi"] = image_label.lower()
         vector_database = st.session_state.vdb
 
     # vector_database = load_faiss_index(image_label.lower())
